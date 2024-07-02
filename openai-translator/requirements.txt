@@ -1,0 +1,9 @@
+openai==1.14.2
+pdfplumber
+simplejson
+requests
+PyYAML
+pillow
+reportlab
+pandas
+loguru
