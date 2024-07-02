@@ -4,7 +4,7 @@ class Model:
     def make_text_prompt(self, text: str, target_language: str) -> str:
         return f"翻译为{target_language}：{text}"
 
-# 提示词增加“所有的内容都”，否则部分内容可能无法翻译。
+    # update prompt based on the new model
     def make_table_prompt(self, table: str, target_language: str) -> str:
         return f"所有的内容都翻译为{target_language}（包括表格内所有内容），保持间距（空格，分隔符），以表格形式返回：\n{table}"
 
