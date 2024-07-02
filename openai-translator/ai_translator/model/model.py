@@ -6,7 +6,7 @@ class Model:
 
 # 提示词增加“所有的内容都”，否则部分内容可能无法翻译。
     def make_table_prompt(self, table: str, target_language: str) -> str:
-        return f"所有的内容都翻译为{target_language}，保持间距（空格，分隔符），以表格形式返回：\n{table}"
+        return f"所有的内容都翻译为{target_language}（包括表格内所有内容），保持间距（空格，分隔符），以表格形式返回：\n{table}"
 
     def translate_prompt(self, content, target_language: str) -> str:
         if content.content_type == ContentType.TEXT:

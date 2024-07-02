@@ -90,19 +90,24 @@ class Writer:
                         if content.content_type == ContentType.TEXT:
                             # Add translated text to the Markdown file
                             text = content.translation
+                            LOG.debug(f"写入文本内容: {text}")
                             output_file.write(text + '\n\n')
 
                         elif content.content_type == ContentType.TABLE:
                             # Add table to the Markdown file
                             table = content.translation
-                            header = '| ' + ' | '.join(str(column) for column in table.columns) + ' |' + '\n'
-                            separator = '| ' + ' | '.join(['---'] * len(table.columns)) + ' |' + '\n'
+                            LOG.debug(f"写入表格内容: {table}")
+                            header = ' '.join(str(column) for column in table.columns)+ '\n'
+                            filter_col = [col for col in table.columns if col != '|']
+                            separator = '| ' + ' |'.join(['---'] * len(filter_col)) + ' |' + '\n'
                             # body = '\n'.join(['| ' + ' | '.join(row) + ' |' for row in table.values.tolist()]) + '\n\n'
-                            body = '\n'.join(['| ' + ' | '.join(str(cell) for cell in row) + ' |' for row in table.values.tolist()]) + '\n\n'
+                            body = '\n'.join([' '.join(str(cell) for cell in row) for row in table.values.tolist()]) + '\n\n'
+                            LOG.debug(f"表格头: {header}")
+                            LOG.debug(f"表格分隔符: {separator}")
+                            LOG.debug(f"表格内容: {body}")
                             output_file.write(header + separator + body)
 
                 # Add a page break (horizontal rule) after each page except the last one
                 if page != book.pages[-1]:
                     output_file.write('---\n\n')
-
         LOG.info(f"翻译完成: {output_file_path}")

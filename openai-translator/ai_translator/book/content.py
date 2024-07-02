@@ -51,7 +51,8 @@ class TableContent(Content):
             table_data = [row.strip().split() for row in translation.strip().split('\n')]
             LOG.debug(table_data)
             # Create a DataFrame from the table_data
-            translated_df = pd.DataFrame(table_data[1:], columns=table_data[0])
+            # noted that turbo now return the table with |----|----| so we need to skip that line
+            translated_df = pd.DataFrame(table_data[2:], columns=table_data[0])
             LOG.debug(translated_df)
             self.translation = translated_df
             self.status = status
