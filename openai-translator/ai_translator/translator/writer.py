@@ -14,11 +14,11 @@ class Writer:
     def __init__(self):
         pass
 
-    def save_translated_book(self, book: Book, output_file_path: str = None, file_format: str = "PDF"):
+    def save_translated_book(self, book: Book, output_file_path: str = None, file_format: str = "PDF", target_language: str = ""):
         if file_format.lower() == "pdf":
             self._save_translated_book_pdf(book, output_file_path)
         elif file_format.lower() == "markdown":
-            self._save_translated_book_markdown(book, output_file_path)
+            self._save_translated_book_markdown(book, output_file_path, target_language= target_language)
         else:
             raise ValueError(f"Unsupported file format: {file_format}")
 
@@ -76,9 +76,12 @@ class Writer:
         doc.build(story)
         LOG.info(f"翻译完成: {output_file_path}")
 
-    def _save_translated_book_markdown(self, book: Book, output_file_path: str = None):
+    def _save_translated_book_markdown(self, book: Book, output_file_path: str = None, target_language: str = ""):
         if output_file_path is None:
-            output_file_path = book.pdf_file_path.replace('.pdf', f'_translated.md')
+            if target_language != "":
+                output_file_path = book.pdf_file_path.replace('.pdf', f'_translated_{target_language}.md')
+            else:
+                output_file_path = book.pdf_file_path.replace('.pdf', f'_translated.md')
 
         LOG.info(f"pdf_file_path: {book.pdf_file_path}")
         LOG.info(f"开始翻译: {output_file_path}")

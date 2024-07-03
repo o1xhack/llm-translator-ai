@@ -6,7 +6,7 @@ class Model:
 
     # update prompt based on the new model
     def make_table_prompt(self, table: str, target_language: str) -> str:
-        return f"所有的内容都翻译为{target_language}（包括表格内所有内容），保持间距（空格，分隔符），以表格形式返回：\n{table}"
+        return f"所有的内容都翻译为{target_language}（包括列表里面的任何内容），保持间距（空格，分隔符），以表格形式返回：\n{table}"
 
     def translate_prompt(self, content, target_language: str) -> str:
         if content.content_type == ContentType.TEXT:
