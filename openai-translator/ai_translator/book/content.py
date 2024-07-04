@@ -48,11 +48,12 @@ class TableContent(Content):
 
             LOG.debug(translation)
             # Convert the string to a list of lists
-            table_data = [row.strip().split() for row in translation.strip().split('\n')]
-            LOG.debug(table_data)
+            table_data = self.preprocess_table_data(translation)
+            # table_data = [row.strip().split() for row in translation.strip().split('\n')]
+            # LOG.debug(table_data)
             # noted that turbo now return the table with |----|----| so we need to skip that line
-            table_data = [line for line in table_data if not any(cell.startswith("|--") for cell in line)]
-            LOG.debug(table_data)
+            # table_data = [line for line in table_data if not any(cell.startswith("|--") for cell in line)]
+            # LOG.debug(table_data)
             # Create a DataFrame from the table_data
             translated_df = pd.DataFrame(table_data[1:], columns=table_data[0])
             LOG.debug(translated_df)
@@ -78,3 +79,27 @@ class TableContent(Content):
 
     def get_original_as_str(self):
         return self.original.to_string(header=False, index=False)
+    
+    def preprocess_table_data(self, translation):
+        rows = translation.strip().split('\n')
+        processed_rows = []
+
+        for row in rows:
+            stripped_row = row.strip()
+            # 如果这一行是分隔符线，则不进行分割 If this line is a separator line, do not split
+            if '|' in stripped_row and '-' in stripped_row.replace('|', '').strip():
+                continue  # 跳过这一行 Skip this line
+            else:
+                # 分割并保留分割符 '|' Split and keep the separator '|'
+                split_row = stripped_row.split('|')
+                # 重新组合保留 '|' Reassemble and keep '|'
+                cleaned_row = []
+                for i, cell in enumerate(split_row):
+                    cleaned_row.append(cell.strip())
+                    if i < len(split_row) - 1:
+                        cleaned_row.append('|') 
+                # 过滤掉空单元格，只保留内容和 '|' Filter out empty cells, keep only content and '|'
+                cleaned_row = [cell for cell in cleaned_row if cell]
+                processed_rows.append(cleaned_row)
+        LOG.debug(processed_rows)
+        return processed_rows
